@@ -1,10 +1,7 @@
-// if (index < 0 || index >= buckets.length) {
-//   throw new Error("Trying to access index out of bound");
-// }
-
 class HashMap {
   constructor() {
-    this.hashMap = [];
+    this.hashMap = Array(16);
+    this.loadFactor = 0.8;
   }
   hash(key) {
     let hashCode = 0;
@@ -14,7 +11,7 @@ class HashMap {
       hashCode = primeNumber * hashCode + key.charCodeAt(i);
     }
 
-    return hashCode % 16;
+    return hashCode % this.hashMap.length;
   }
   set(key, value) {
     const hash = this.hash(key);
@@ -29,9 +26,23 @@ class HashMap {
     } else {
       this.hashMap[hash] = nextHashNode;
     }
+
+    if (this.hashMap.length * this.loadFactor < this.length()) {
+      const newHashMap = Array(this.hashMap.length + 16);
+      for (const bucket of this.hashMap) {
+        if (!bucket) continue;
+        const newHash = this.hash(bucket.key);
+        newHashMap[newHash] = bucket;
+      }
+      this.hashMap = newHashMap;
+      console.log(this.hashMap);
+    }
   }
   get(key) {
     const hash = this.hash(key);
+    if (hash < 0 || hash >= this.hashMap.length) {
+      throw new Error("Trying to access index out of bound" + hash + key);
+    }
     let hashItem = this.#getItem(hash);
     if (hashItem) {
       return hashItem.find(key);
