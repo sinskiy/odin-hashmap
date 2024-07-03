@@ -73,6 +73,9 @@ class HashMap {
     }
     return size;
   }
+  clear() {
+    this.hashMap = [];
+  }
   #getItem(hash) {
     return this.hashMap[hash];
   }
