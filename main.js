@@ -39,7 +39,27 @@ class HashMap {
       return null;
     }
   }
-  remove(key) {}
+  remove(key) {
+    const hash = this.hash(key);
+    let hashItem = this.#getItem(hash);
+    if (hashItem) {
+      let currentNode = hashItem;
+      if (currentNode.key === key) {
+        if (!currentNode.nextNode) delete this.hashMap[hash];
+        else this.hashMap[hash] = currentNode.nextNode;
+        return;
+      }
+      while (currentNode.nextNode) {
+        if (currentNode.nextNode.key === key) {
+          currentNode.nextNode = currentNode.nextNode.nextNode;
+          return true;
+        }
+      }
+      return false;
+    } else {
+      return false;
+    }
+  }
   #getItem(hash) {
     return this.hashMap[hash];
   }
