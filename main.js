@@ -18,33 +18,64 @@ class HashMap {
   }
   set(key, value) {
     const hash = this.hash(key);
-    const hashItem = getItem(hash);
-    const nextHashNode = new HashNode(value);
+    let hashItem = this.#getItem(hash);
+    const nextHashNode = new HashNode(key, value);
     if (hashItem) {
-      hashItem.getTail().nextNode = nextHashNode;
+      if (hashItem.find(key)) {
+        hashItem.value = value;
+      } else {
+        hashItem.getTail().nextNode = nextHashNode;
+      }
     } else {
-      hashItem = nextHashNode;
+      this.hashMap[hash] = nextHashNode;
     }
   }
   get(key) {
     const hash = this.hash(key);
-    return this.#getItem(hash);
+    let hashItem = this.#getItem(hash);
+    if (hashItem) {
+      return hashItem.find(key);
+    } else {
+      return null;
+    }
   }
+  remove(key) {}
   #getItem(hash) {
     return this.hashMap[hash];
   }
 }
 
 class HashNode {
-  constructor(value, nextNode) {
+  constructor(key, value, nextNode) {
+    this.key = key;
     this.value = value;
     this.nextNode = nextNode;
   }
   getTail() {
     let currentNode = this;
-    while (currentNode !== null) {
+    while (currentNode.nextNode) {
       currentNode = currentNode.nextNode;
     }
     return currentNode;
   }
+  find(key) {
+    let currentNode = this;
+    let currentIndex = 0;
+    while (currentNode) {
+      if (currentNode.key === key) return currentNode;
+      currentNode = currentNode.nextNode;
+      currentIndex++;
+    }
+    return null;
+  }
 }
+
+const a = new HashMap();
+a.set("sinskiy", 15);
+console.log(a.get("sinskiy"));
+a.set("sinskiy", 20);
+console.log(a.get("sinskiy"));
+a.set("hello", 0);
+console.log(a.get("hello"));
+a.remove("hello");
+console.log(a.get("hello"));
