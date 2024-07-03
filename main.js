@@ -61,20 +61,53 @@ class HashMap {
     }
   }
   length() {
+    return this.#getEach("length");
+  }
+  clear() {
+    this.hashMap = [];
+  }
+  keys() {
+    return this.#getEach("keys");
+  }
+  values() {
+    return this.#getEach("values");
+  }
+  entries() {
+    return this.#getEach("entries");
+  }
+  #getEach(type) {
     let size = 0;
+    const keys = [];
+    const values = [];
+    const entries = [];
     const filteredHashMap = this.hashMap.filter((hashItem) => hashItem.value);
     for (const hashItem of filteredHashMap) {
       size++;
       let currentNode = hashItem;
+      keys.push(currentNode.key);
+      values.push(currentNode.value);
+      entries.push([currentNode.key, currentNode.value]);
       while (currentNode.nextNode) {
         currentNode = currentNode.nextNode;
+        keys.push(currentNode.key);
+        values.push(currentNode.value);
+        entries.push([currentNode.key, currentNode.value]);
         size++;
       }
     }
-    return size;
-  }
-  clear() {
-    this.hashMap = [];
+    switch (type) {
+      case "length":
+        return size;
+
+      case "keys":
+        return keys;
+
+      case "values":
+        return values;
+
+      case "entries":
+        return entries;
+    }
   }
   #getItem(hash) {
     return this.hashMap[hash];
@@ -115,4 +148,6 @@ a.set("hello", 0);
 console.log(a.get("hello"));
 a.remove("hello");
 console.log(a.get("hello"));
-console.log(a.length());
+console.log(a.length(), a.entries(), a.values(), a.keys());
+a.set("kilwinta", 12);
+console.log(a.length(), a.entries(), a.values(), a.keys());
