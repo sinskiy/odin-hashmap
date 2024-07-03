@@ -3,6 +3,9 @@
 // }
 
 class HashMap {
+  constructor() {
+    this.hashMap = [];
+  }
   hash(key) {
     let hashCode = 0;
 
@@ -12,5 +15,36 @@ class HashMap {
     }
 
     return hashCode;
+  }
+  set(key, value) {
+    const hash = this.hash(key);
+    const hashItem = getItem(hash);
+    const nextHashNode = new HashNode(value);
+    if (hashItem) {
+      hashItem.getTail().nextNode = nextHashNode;
+    } else {
+      hashItem = nextHashNode;
+    }
+  }
+  get(key) {
+    const hash = this.hash(key);
+    return this.#getItem(hash);
+  }
+  #getItem(hash) {
+    return this.hashMap[hash];
+  }
+}
+
+class HashNode {
+  constructor(value, nextNode) {
+    this.value = value;
+    this.nextNode = nextNode;
+  }
+  getTail() {
+    let currentNode = this;
+    while (currentNode !== null) {
+      currentNode = currentNode.nextNode;
+    }
+    return currentNode;
   }
 }
