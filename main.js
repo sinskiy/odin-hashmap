@@ -14,7 +14,7 @@ class HashMap {
       hashCode = primeNumber * hashCode + key.charCodeAt(i);
     }
 
-    return hashCode;
+    return hashCode % 16;
   }
   set(key, value) {
     const hash = this.hash(key);
@@ -60,6 +60,19 @@ class HashMap {
       return false;
     }
   }
+  length() {
+    let size = 0;
+    const filteredHashMap = this.hashMap.filter((hashItem) => hashItem.value);
+    for (const hashItem of filteredHashMap) {
+      size++;
+      let currentNode = hashItem;
+      while (currentNode.nextNode) {
+        currentNode = currentNode.nextNode;
+        size++;
+      }
+    }
+    return size;
+  }
   #getItem(hash) {
     return this.hashMap[hash];
   }
@@ -99,3 +112,4 @@ a.set("hello", 0);
 console.log(a.get("hello"));
 a.remove("hello");
 console.log(a.get("hello"));
+console.log(a.length());
