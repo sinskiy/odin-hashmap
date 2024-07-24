@@ -1,0 +1,56 @@
+class HashMap {
+  constructor() {
+    this.buckets = Array(16);
+  }
+  set(key, value) {
+    const index = this.#hash(key);
+
+    if (index < 0 || index >= this.buckets.length) {
+      throw new Error("Trying to access index out of bound");
+    }
+
+    const bucket = this.buckets[index];
+    if (bucket instanceof LinkedList) {
+      if (bucket.key !== key) {
+        // TODO: deal with collisions (linked lists)
+        throw new Error(
+          `There's already an item at that position with key ${this.buckets[index].key} and value ${this.buckets[index].value}`
+        );
+      }
+      bucket.value = value;
+    } else {
+      this.buckets[index] = new LinkedList(key, value);
+    }
+  }
+  #hash(key) {
+    let hashCode = 0;
+
+    const primeNumber = 31;
+    for (let i = 0; i < key.length; i++) {
+      hashCode =
+        (primeNumber * hashCode + key.charCodeAt(i)) % this.buckets.length;
+    }
+
+    return hashCode;
+  }
+}
+
+class LinkedList {
+  constructor(key, value) {
+    this.key = key;
+    this.value = value;
+  }
+}
+
+const test = new HashMap();
+test.set("apple", "red");
+test.set("banana", "yellow");
+test.set("carrot", "orange");
+test.set("dog", "brown");
+test.set("elephant", "gray");
+test.set("frog", "green");
+test.set("grape", "purple");
+test.set("ice cream", "white");
+test.set("jacket", "blue");
+test.set("kite", "pink");
+console.log(test.buckets);
