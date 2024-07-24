@@ -14,12 +14,11 @@ class HashMap {
       if (bucket.key !== key) {
         // TODO: deal with collisions (linked lists)
         throw new Error(
-          `There's already an item at that position with key ${this.buckets[index].key} and value ${this.buckets[index].value}`
+          `There's already an item at that position with key ${bucket.key} and value ${bucket.value}`
         );
       }
       bucket.value = value;
     } else {
-      // bucket is a reference, so we have to update the actual value
       this.buckets[index] = new LinkedList(key, value);
     }
   }
@@ -28,6 +27,12 @@ class HashMap {
     // TODO: deal with linked lists (collisions)
     const bucket = this.buckets[index];
     return bucket.value;
+  }
+  has(key) {
+    const index = this.#hash(key);
+    const bucket = this.buckets[index];
+    // TODO: deal with linked lists (collisions)
+    return bucket instanceof LinkedList && bucket.key === key;
   }
   #hash(key) {
     let hashCode = 0;
@@ -66,3 +71,11 @@ console.log(test.get("banana"));
 console.log(test.get("dog"));
 console.log(test.get("ice cream"));
 console.log(test.get("apple"));
+console.log(test.has("apple"));
+console.log(test.has("frog"));
+console.log(test.has("kite"));
+console.log(test.has("jacket"));
+console.log(test.has("kite"));
+console.log(test.has("ice cream"));
+console.log(test.has("doesn't exist"));
+console.log(test.has("doesn't exist either"));
