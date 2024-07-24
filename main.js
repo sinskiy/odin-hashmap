@@ -1,6 +1,6 @@
 class HashMap {
   constructor() {
-    this.buckets = Array(16);
+    this.#newHashMap();
   }
   set(key, value) {
     const index = this.#hash(key);
@@ -47,6 +47,22 @@ class HashMap {
     }
     return has;
   }
+  length() {
+    let length = 0;
+
+    for (const bucket of this.buckets) {
+      if (typeof bucket === "object") length++;
+    }
+
+    return length;
+  }
+  clear() {
+    this.#newHashMap();
+  }
+  #newHashMap() {
+    const initialSize = 16;
+    this.buckets = Array(initialSize);
+  }
   #hash(key) {
     let hashCode = 0;
 
@@ -68,9 +84,12 @@ class LinkedList {
 }
 
 const test = new HashMap();
+console.assert(test.length() === 0);
 test.set("apple", "red");
+console.assert(test.length() === 1);
 test.set("banana", "yellow");
 test.set("carrot", "orange");
+console.assert(test.length() === 3);
 test.set("dog", "brown");
 test.set("elephant", "gray");
 test.set("frog", "green");
@@ -78,6 +97,7 @@ test.set("grape", "purple");
 test.set("ice cream", "white");
 test.set("jacket", "blue");
 test.set("kite", "pink");
+console.assert(test.length() === 10);
 console.assert(test.buckets);
 console.assert(test.get("apple") === "red");
 console.assert(test.get("banana") === "yellow");
@@ -93,6 +113,9 @@ console.assert(test.has("ice cream"));
 console.assert(!test.has("doesn't exist"));
 console.assert(!test.has("doesn't exist either"));
 console.assert(test.remove("apple"));
+console.assert(test.length() === 9);
 console.assert(!test.get("apple"));
 console.assert(!test.remove("appl"));
+console.assert(test.length() === 9);
 console.assert(test.remove("ice cream"));
+console.assert(test.length() === 8);
