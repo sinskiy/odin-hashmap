@@ -26,13 +26,26 @@ class HashMap {
     const index = this.#hash(key);
     // TODO: deal with linked lists (collisions)
     const bucket = this.buckets[index];
-    return bucket.value;
+    if (bucket) {
+      return bucket.value;
+    } else {
+      return null;
+    }
   }
   has(key) {
     const index = this.#hash(key);
     const bucket = this.buckets[index];
     // TODO: deal with linked lists (collisions)
     return bucket instanceof LinkedList && bucket.key === key;
+  }
+  remove(key) {
+    const has = this.has(key);
+    if (has) {
+      // TODO: deal with linked lists (collisions)
+      const index = this.#hash(key);
+      delete this.buckets[index];
+    }
+    return has;
   }
   #hash(key) {
     let hashCode = 0;
@@ -79,3 +92,7 @@ console.assert(test.has("kite"));
 console.assert(test.has("ice cream"));
 console.assert(!test.has("doesn't exist"));
 console.assert(!test.has("doesn't exist either"));
+console.assert(test.remove("apple"));
+console.assert(!test.get("apple"));
+console.assert(!test.remove("appl"));
+console.assert(test.remove("ice cream"));
