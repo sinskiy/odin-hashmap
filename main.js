@@ -83,6 +83,39 @@ class HashMap {
 
     return length;
   }
+  keys() {
+    const keys = [];
+    for (const bucket of this.buckets) {
+      let node = bucket;
+      while (node) {
+        keys.push(node.key);
+        node = node.nextNode;
+      }
+    }
+    return keys;
+  }
+  values() {
+    const values = [];
+    for (const bucket of this.buckets) {
+      let node = bucket;
+      while (node) {
+        values.push(node.value);
+        node = node.nextNode;
+      }
+    }
+    return values;
+  }
+  entries() {
+    const entries = [];
+    for (const bucket of this.buckets) {
+      let node = bucket;
+      while (node) {
+        entries.push([node.key, node.value]);
+        node = node.nextNode;
+      }
+    }
+    return entries;
+  }
   #grow() {
     const oldBuckets = this.buckets;
     const bucketsAmount = oldBuckets.length;
@@ -122,61 +155,3 @@ class LinkedList {
     this.nextNode = null;
   }
 }
-
-const test = new HashMap();
-test.loadFactor = 0.75;
-console.assert(test.length() === 0);
-test.set("apple", "red");
-console.assert(test.length() === 1);
-test.set("banana", "yellow");
-test.set("carrot", "orange");
-console.assert(test.length() === 3);
-test.set("dog", "brown");
-test.set("elephant", "gray");
-test.set("frog", "green");
-test.set("grape", "purple");
-test.set("hat", "black");
-test.set("ice cream", "white");
-test.set("jacket", "blue");
-test.set("kite", "pink");
-test.set("lion", "golden");
-console.assert(test.loadFactor === 0.75);
-console.assert(test.loadFactor === test.length() / test.buckets.length);
-console.assert(test.length() === 12);
-console.assert(test.buckets);
-
-test.set("apple", "black");
-test.set("kite", "blue");
-test.set("lion", "yellow");
-test.set("apple", "red");
-console.assert(test.length() / test.buckets.length === 0.75);
-console.assert(test.length() === 12);
-console.assert(test.buckets);
-
-console.assert(test.get("apple") === "red");
-console.assert(test.get("banana") === "yellow");
-console.assert(test.get("dog") === "brown");
-console.assert(test.get("ice cream") === "white");
-console.assert(test.get("apple") === "red");
-console.assert(!test.has("appl"));
-console.assert(test.has("frog"));
-console.assert(test.has("hat"));
-console.assert(test.has("lion"));
-console.assert(test.has("kite"));
-console.assert(test.has("ice cream"));
-console.assert(!test.has("doesn't exist"));
-console.assert(!test.has("doesn't exist either"));
-
-test.set("moon", "silver");
-console.assert(test.buckets.length === 32);
-console.assert(test.buckets);
-
-console.assert(test.remove("apple"));
-console.assert(test.length() === 12);
-console.assert(!test.get("apple"));
-test.set("lion", "nice");
-console.assert(test.get("lion") === "nice");
-console.assert(!test.remove("appl"));
-console.assert(test.length() === 12);
-console.assert(test.remove("ice cream"));
-console.assert(test.length() === 11);
