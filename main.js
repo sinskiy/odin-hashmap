@@ -1,5 +1,6 @@
 class HashMap {
   constructor() {
+    this.loadFactor = 0.75;
     this.#newHashMap();
   }
   set(key, value) {
@@ -21,6 +22,8 @@ class HashMap {
     } else {
       this.buckets[index] = new LinkedList(key, value);
     }
+
+    this.#checkForGrowth();
   }
   get(key) {
     const index = this.#hash(key);
@@ -47,21 +50,44 @@ class HashMap {
     }
     return has;
   }
+  #checkForGrowth() {
+    console.log(
+      "checking...",
+      this.length(),
+      this.loadFactor * this.buckets.length
+    );
+    if (this.length() > this.loadFactor * this.buckets.length) {
+      console.log("Ready to grow!");
+      this.#grow();
+    }
+  }
   length() {
     let length = 0;
 
     for (const bucket of this.buckets) {
+      // TODO: deal with linked lists (collisions)
       if (typeof bucket === "object") length++;
     }
 
     return length;
   }
+  #grow() {
+    const oldBuckets = this.buckets;
+    const bucketsAmount = oldBuckets.length;
+    this.#newHashMap(bucketsAmount * 2);
+
+    for (const bucket of oldBuckets) {
+      if (bucket instanceof LinkedList) {
+        // TODO: deal with linked lists (collisions)
+        this.set(bucket.key, bucket.value);
+      }
+    }
+  }
   clear() {
     this.#newHashMap();
   }
-  #newHashMap() {
-    const initialSize = 16;
-    this.buckets = Array(initialSize);
+  #newHashMap(length = 16) {
+    this.buckets = Array(length);
   }
   #hash(key) {
     let hashCode = 0;
