@@ -19,8 +19,15 @@ class HashMap {
       }
       bucket.value = value;
     } else {
+      // bucket is a reference, so we have to update the actual value
       this.buckets[index] = new LinkedList(key, value);
     }
+  }
+  get(key) {
+    const index = this.#hash(key);
+    // TODO: deal with linked lists (collisions)
+    const bucket = this.buckets[index];
+    return bucket.value;
   }
   #hash(key) {
     let hashCode = 0;
@@ -54,3 +61,8 @@ test.set("ice cream", "white");
 test.set("jacket", "blue");
 test.set("kite", "pink");
 console.log(test.buckets);
+console.log(test.get("apple"));
+console.log(test.get("banana"));
+console.log(test.get("dog"));
+console.log(test.get("ice cream"));
+console.log(test.get("apple"));
